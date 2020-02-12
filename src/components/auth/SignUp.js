@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { signUp } from "../../store/actions/authActions";
 
 class SignUp extends Component {
   state = {
@@ -10,7 +12,7 @@ class SignUp extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    console.log(this.state);
+    this.props.signUp(this.state);
   };
 
   handleChange = event => {
@@ -22,7 +24,7 @@ class SignUp extends Component {
   render() {
     return (
       <div className="container">
-        <form className="white" onSubmit={this.handleSubmit}>
+        <form className="white" onSubmit={this.handleSubmit} noValidate>
           <h5 className="grey-text text-darken-3">Sign up</h5>
           <div className="input-field">
             <label htmlFor="txtEmail">Email</label>
@@ -62,7 +64,7 @@ class SignUp extends Component {
           </div>
           <div className="input-field">
             <button className="btn pink lighten-1 z-depth-0" type="submit">
-              Sign up
+              Sign up {this.props.authError ? ` | ${this.props.authError}` : ``}
             </button>
           </div>
         </form>
@@ -71,4 +73,11 @@ class SignUp extends Component {
   }
 }
 
-export default SignUp;
+export default connect(
+  state => {
+    return {
+      authError: state.auth.authError
+    };
+  },
+  { signUp }
+)(SignUp);
